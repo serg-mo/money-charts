@@ -1,13 +1,13 @@
 # Demo
-![demo](./simple-charts.gif)
+TODO: add gif here
 
 # Production
-https://serg-mo.github.io/simple-charts/
+TODO: public to github pages, e.g., https://serg-mo.github.io/money-charts/
 
-# Dev
+# Development
+TODO: npm run dev
 ```
-docker build -t simple-charts .
-docker run -it --rm -p 80:80 -v "${PWD}":/var/www/html/ simple-charts
+
 
 open http://localhost
 ```

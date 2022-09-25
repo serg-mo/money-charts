@@ -1,0 +1,89 @@
+html, body {
+  text-overflow: hidden;
+}
+
+body {
+  min-width: 1000px;
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  text-align: center;
+}
+
+div.chart {
+  min-height: 200px;
+  min-width: 200px;
+  border-radius: 5px;
+  position: relative;
+  margin: auto;
+}
+
+div.pie {
+  height: 240px;
+  width: 480px;
+}
+
+div.stack {
+  height: 480px;
+  width: 1000px;
+}
+
+div.line {
+  min-height: 200px;
+  min-width: 400px;
+}
+
+div.bar {
+  min-height: 200px;
+  min-width: 800px;
+}
+
+
+#transactions {
+  color: #333333;
+  margin: 10px auto;
+}
+
+#transactions th {
+  text-transform: capitalize;
+  font-size: 12px;
+}
+
+#transactions td {
+  font-size: 11px;
+}
+
+
+#dnd {
+  font-size: 40px;
+  text-align: center;
+  display: table;
+}
+
+#dnd input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#app div.stack {
+  height: 470px;
+  width: 960px;
+}
+
+#app div.pie {
+  height: 240px;
+  width: 480px;
+}
