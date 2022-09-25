@@ -9,13 +9,6 @@ var bar;
 
 var app;
 
-// this does not work in jquery onload below
-window.onload = () => {
-  $(".ui.modal")
-    .modal('setting', 'closable', false)
-    .modal("show");
-}
-
 $(() => {
   app = new Vue({
     el: "#app",
@@ -62,83 +55,10 @@ $(() => {
         section_one_wrapper();
       },
     },
-    /*
-    computed: {
-      getter () {
-        return 3
-      }
-    }
-    */
   })
-
-  $("#file").on("change", file_handler);
-
-  // skip file upload, if one is available
-  $.getJSON('transactions.json', (json) => {
-    console.log("Data on the server")
-    set_transactions(json.transactions);
-  }, (error) => {
-    console.log("No data on the server, wait for drag and drop")
-  });
 
   $("body").on("keydown", key_handler);
 });
-
-function file_handler() {
-  let reader = new FileReader();
-  reader.onload = reader_onload;
-  reader.readAsText(event.target.files[0]);
-}
-
-function reader_onload(e) {
-  let json = JSON.parse(e.target.result); // FileReader
-  set_transactions(json.transactions)
-}
-
-function set_transactions(transactions)
-{
-  app.transactions = transactions.map(parse_transaction);
-  app.transactions = jmespath.search(app.transactions, "[?category != 'Income']"); // spending only
-  app.transactions.sort((a, b) => { return (parse_date(a["date"]) - parse_date(b["date"])); }); // chronological order
-
-  section_one_setup("#section_one");
-  section_one_wrapper();
-  section_one_update(800); // initial call
-  $(".ui.modal").modal("hide");
-}
-
-function parse_transaction(t)
-{
-  // uuid, record_type, transaction_type, bookkeeping_type
-  // description, categories.[].[name, folder]
-  // times.[when_recorded,when_received] // timestamp
-  // amounts.[].amount // cents * 100
-  // geo.[city, state, zip, lat, lon, timezone]
-  // subtype, // t["transaction_type"]
-  // datetime, // datetime->format("Y-m-d H:i:s")
-  // month, // datetime->format("M")
-  // time, // datetime->format("H:i:s")
-  // weekday, // datetime->format("D")
-
-  // source: "UTC", destination: "America/Los_Angeles"
-  let str      = t["times"]["when_recorded_local"].slice(0, 10).replace(" ", "T"); // yyyy-mm-dd
-  let datetime = new Date(t["times"]["when_recorded_local"]);
-
-  let monday   = new Date(datetime);
-  monday.setDate(datetime.getDate() - datetime.getDay() + 1);
-
-  let result = {
-    date:         format_date(datetime, "date"),
-    week:         format_date(monday, "week"),
-    month:        format_date(datetime, "month"),
-    amount:       t["amounts"]["amount"] / 10000,
-    category:     t["categories"][0]["folder"],
-    subcategory:  t["categories"][0]["name"],
-    description:  t["description"], // raw description
-  };
-
-  return result;
-}
 
 function section_one_setup() {
   // TODO: refactor all of this as plugins, https://www.chartjs.org/docs/latest/developers/plugins.html
