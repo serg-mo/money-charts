@@ -1,47 +1,55 @@
 <script>
 export default {
   methods: {
-      // $("#file").on("change", file_handler);
-      file_handler() {
-          /*
-        let reader = new FileReader();
-        reader.onload = reader_onload;
-        reader.readAsText(event.target.files[0]);
-        */
-      },
-      reader_onload(e) {
-        // let json = JSON.parse(e.target.result); // FileReader
-        // set_transactions(json.transactions)
-      },
+    handleFileChange(event) {
+      let reader = new FileReader();
+      reader.onload = this.handleFileLoad;
+      reader.readAsText(event.target.files[0]);
+    },
+    handleFileLoad(event) {
+      let transactions = this.$papa.parse(event.target.result, { header: true })
+      console.log(transactions.data)
 
-      set_transactions(transactions)
-      {
-          /*
-        app.transactions = transactions.map(this.parse_transaction);
-        app.transactions = jmespath.search(app.transactions, "[?category != 'Income']"); // spending only
-        app.transactions.sort((a, b) => { return (parse_date(a["date"]) - parse_date(b["date"])); }); // chronological order
-          */
-        // $(".ui.modal").modal("hide");
-      },
-      parse_transaction(t)
-      {
-        // source: "UTC", destination: "America/Los_Angeles"
-        let str      = t["times"]["when_recorded_local"].slice(0, 10).replace(" ", "T"); // yyyy-mm-dd
-        let datetime = new Date(t["times"]["when_recorded_local"]);
+      // TODO: set transactions state in vuex
+      /*
+      app.transactions = transactions.map(this.parse_transaction);
+      app.transactions = jmespath.search(app.transactions, "[?category != 'Income']"); // spending only
+      app.transactions.sort((a, b) => { return (parse_date(a["date"]) - parse_date(b["date"])); }); // chronological order
+      */
+    },
+    parse_transaction(t)
+    {
+      // Account #
+      // Address
+      // Amount
+      // Appears On Your Statement As
+      // Card Member
+      // Category
+      // City/State
+      // Country
+      // Date
+      // Description
+      // Extended Details
+      // Reference
+      // Zip Code
 
-        let monday   = new Date(datetime);
-        monday.setDate(datetime.getDate() - datetime.getDay() + 1);
+      // source: "UTC", destination: "America/Los_Angeles"
+      let str      = t["times"]["when_recorded_local"].slice(0, 10).replace(" ", "T"); // yyyy-mm-dd
+      let datetime = new Date(t["times"]["when_recorded_local"]);
 
-        return {
-          date:         format_date(datetime, "date"),
-          week:         format_date(monday, "week"),
-          month:        format_date(datetime, "month"),
-          amount:       t["amounts"]["amount"] / 10000,
-          category:     t["categories"][0]["folder"],
-          subcategory:  t["categories"][0]["name"],
-          description:  t["description"], // raw description
-        };
-      }
+      let monday   = new Date(datetime);
+      monday.setDate(datetime.getDate() - datetime.getDay() + 1);
+
+      return {
+        date:         format_date(datetime, "date"),
+        week:         format_date(monday, "week"),
+        month:        format_date(datetime, "month"),
+        amount:       t["amounts"]["amount"] / 10000,
+        category:     t["categories"][0]["folder"],
+        subcategory:  t["categories"][0]["name"],
+        description:  t["description"], // raw description
+      };
+    }
   }
 }
 </script>
@@ -51,7 +59,7 @@ export default {
       Drag and Drop<br />
       Transactions
     </div>
-    <input type="file" class="absolute inset-0 opacity-0" />
+    <input type="file" @change="handleFileChange" class="absolute inset-0 opacity-0" />
   </div>
 </template>
 <style>
