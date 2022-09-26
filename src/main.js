@@ -9,17 +9,13 @@ import './assets/base.css'
 const store = createStore({
   state () {
     return {
-      count: 0,
       transactions: []
     }
   },
   mutations: {
-    increment (state) {
-      state.count++
-    },
-    setTransactions (state) {
-      state.transactions = []
-    } 
+    setTransactions (state, transactions) {
+      state.transactions = transactions
+    }
   }
 })
 

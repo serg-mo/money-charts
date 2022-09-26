@@ -382,26 +382,6 @@ function pick_cutoff(type) {
   return format_date(date);
 }
 
-function format_date(date, format = "date") {
-  let month = ("0" + (date.getMonth() + 1)).slice(-2); // zero-based month
-  let day   = ("0" + date.getDate()).slice(-2); // zero-padded
-  let year  = date.getFullYear();
-
-  if (format == "date") {
-    return [year, month, day].join("-");
-  } else if (format == "week") {
-    return [year, month, day].join("-"); // date of monday
-  } else if (format == "month") {
-    return [year, month].join("-"); // no date
-  }
-}
-
-function parse_date(date) {
-   let [year, month, day] = date.split("-");
-   
-   return new Date(year, parseInt(month) - 1, day); // zero-based month
-}
-
 function make_comparisons(datetime) {
   //let query = `[?${app.time_resolution} == '${label}'].{${app.time_resolution}: ${app.time_resolution}, category: category, subcategory: subcategory, amount: amount}`;
   //make_table($("#table"), filter_transactions(query));
