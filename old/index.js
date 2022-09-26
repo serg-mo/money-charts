@@ -12,28 +12,6 @@ var app;
 $(() => {
   app = new Vue({
     el: "#app",
-    data: {
-      CATEGORY_RESOLUTIONS: ["category", "subcategory", "merchant"],
-      TIME_RESOLUTIONS:     ["date", "week", "month"],
-
-      category_resolution:  "category",
-      category:             null,
-      subcategory:          null,
-      time_resolution:      "month",
-
-      time_after:           pick_cutoff("month"),
-      time_before:          format_date(new Date),
-
-      query:                "",
-      transactions:         [],
-      filtered:             [],
-      data:                 [],
-      x:                    {},
-      y:                    {},
-      xy:                   {},
-
-      charts:               [],
-    },
     watch: {
       category_resolution: (val) => { section_one_wrapper(); },
       category: (val)            => { section_one_wrapper(); },
@@ -145,8 +123,6 @@ function section_one_setup() {
     if (items.length) {
       pick_time_slice(items[0]._index);
     }
-    // TODO: this does not work for some reason
-    //setTimeout(() => sync_dataset_property(pie_two.data, stack.data, 'hidden')); // async sync
   }
 
   let stack_existing_handler = stack.options.legend.onClick;
@@ -176,63 +152,6 @@ function section_one_setup() {
   stack.options.tooltips.filter   = (v) => { return v.yLabel > 0; };
 }
 
-function section_one_wrapper() {
-  app.query = get_query();
-  app.data = jmespath.search(app.transactions, app.query); // this can't be a local variable
-  [app.x, app.y, app.xy] = three_summaries(app.data, app.category_resolution, app.time_resolution);
-
-  [filter, select] = get_query(true).split('.');
-  app.filtered = jmespath.search(app.transactions, filter);
-
-  section_one_update(0);
-}
-
-function section_one_update(duration = 0) {
-  if (!app.data.length)
-    return;
-
-  // TODO: same as below, except with subcategory filter, make this configurable
-
-  // TODO: I can slice this function by chart
-  let x_data  = make_data(app.x, "default");
-  let y_data  = make_data(app.y, "default");
-  let xy_data = make_data(app.xy, Object.keys(app.y)); // labels
-
-  // TODO: consider making data as a set of points
-  // add_average(xy_data.datasets); // this is useful for label
-  //console.log(xy_data);
-
-  if (app.category_resolution == "category") {
-    pie_one.options.title.text = "";
-    pie_one.data = x_data;
-
-    //line.options.title.text = app.category || app.category_resolution;
-    //line.data = y_data;
-  }
-
-  pie_two.options.title.text = app.category || app.category_resolution;
-  pie_two.data = x_data;
-
-  // TODO: just set the query here and have the chart figure out the rest
-  //sync_dataset_property(stack.data, xy_data, "data"); // keep hidden datasets hidden
-  stack.options.title.text = app.category + (app.subcategory ? `: ${app.subcategory}` : "");
-  stack.data = xy_data;
-
-  if (app.category_resolution == "subcategory" && app.category) {
-    let base_color = colors[app.category] || colors['default'];
-    let rgba       = base_color.match(/\d+/g);
-    let palette    = get_palette(base_color, stack.data.datasets.length)
-
-    pie_two.data.datasets[0].backgroundColor = palette;
-
-    stack.data.datasets.forEach((dataset, index) => {
-      dataset.backgroundColor = palette[index];
-    });
-  }
-
-  app.charts.forEach((c) => { c.update() });
-}
-
 function get_palette(base_color, length) {
   let rgba    = base_color.match(/\d+/g);
   let palette = [];
@@ -244,53 +163,6 @@ function get_palette(base_color, length) {
   return palette;
 }
 
-function get_query(include_subcategory = false) {
-  // TODO: consider setting default columns here
-  let fields = [app.category_resolution, app.time_resolution, "amount"]; // category first, amount last
-  let select = fields.reduce((carry, value) => { carry[value] = value; return carry; }, {}); // array -> object
-
-  let filter = `date >= '${app.time_after}'`
-  if (app.time_before) {
-    filter += ` && date <= '${app.time_before}'`;
-  }
-
-  // prefer subcategory over category
-  if (app.category_resolution == "subcategory" && app.category) {
-    filter += ` && category == '${app.category}'`
-
-    // subcategory just keeps track of which datasets to show
-    if (include_subcategory && app.subcategory) {
-      filter += ` && subcategory == '${app.subcategory}'`
-    }
-  }
-
-  return `[?${filter}].` + JSON.stringify(select);
-}
-
-function sync_dataset_property(destination, source)
-{
-  destination = source; // TODO: this is just a placeholder
-}
-
-// TODO: instead of the hover note for average, add an extra dataset with avg as the only value
-// TODO: pies should also do a total and average per slice
-
-// TODO: given xy_summary, I can produce x_summary and y_summary (sorting belongs elsewhere)
-// TODO: I am getting three columns, assume x and y are the first two and aggregate the third one
-function three_summaries(data, x, y) {
-  // I can do this in a single loop, but it's not necessary
-
-  // first column values become datasets, graphed across the values from the second column
-  let x_summary  = data.reduce(single_reducer(x), {});
-  let y_summary  = data.reduce(single_reducer(y), {});
-
-  x_summary = sort_summary(x_summary);
-  init      = sort_summary(x_summary, 0); // preserve the order of the sorted summary (desc)
-
-  let xy_summary = data.reduce(double_reducer(x, y), init);
-
-  return [x_summary, y_summary, xy_summary];
-}
 
 
 function key_handler(event) {

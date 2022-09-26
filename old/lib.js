@@ -337,7 +337,7 @@ function make_data_single(summary, label) {
   let length          = Object.values(summary).length;
   let keys            = Object.keys(summary);
   let data            = Object.values(summary);
-  let backgroundColor = keys.map((key) => colors[key] || colors['default']);
+  // let backgroundColor = keys.map((key) => colors[key] || colors['default']);
 
   return {
     labels: keys,
@@ -359,7 +359,7 @@ function make_data_multiple(summary, labels) {
     datasets.push({
       "label": dimension,
       "data": labels.map((label) => summary[dimension][label] || 0),
-      "backgroundColor": colors[dimension] || colors['default']
+      // "backgroundColor": colors[dimension] || colors['default']
     });
   }
 
@@ -369,6 +369,25 @@ function make_data_multiple(summary, labels) {
   };
 }
 
+// TODO: instead of the hover note for average, add an extra dataset with avg as the only value
+// TODO: pies should also do a total and average per slice
+
+// TODO: given xy_summary, I can produce x_summary and y_summary (sorting belongs elsewhere)
+// TODO: I am getting three columns, assume x and y are the first two and aggregate the third one
+function three_summaries(data, x, y) {
+  // I can do this in a single loop, but it's not necessary
+
+  // first column values become datasets, graphed across the values from the second column
+  let x_summary  = data.reduce(single_reducer(x), {});
+  let y_summary  = data.reduce(single_reducer(y), {});
+
+  x_summary = sort_summary(x_summary);
+  init      = sort_summary(x_summary, 0); // preserve the order of the sorted summary (desc)
+
+  let xy_summary = data.reduce(double_reducer(x, y), init);
+
+  return [x_summary, y_summary, xy_summary];
+}
 
 function sort_summary(summary, init = null) {
   arr = Object.entries(summary);
