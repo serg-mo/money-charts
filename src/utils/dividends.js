@@ -211,25 +211,34 @@ export function dfs(current, best, isBetterThan, prices) {
 
 export async function lookupDividends(symbol) {
   const response = await fetch(`/dividends/${symbol}.json`);
-  const data = await response.json();
+  const { dividends, expenseRatio, price } = await response.json();
 
   // exercise date, dividend in dollars
   const oneYearAgo = moment().subtract(1, "years").unix();
   const filterFN = ([date]) => moment(date).unix() >= oneYearAgo;
 
-  const dividends = data.dividends.filter(filterFN).reverse();
-  const indexed = dividends.map(([date, amount], index) => [index + 1, amount]);
+  const indexed = dividends
+    .filter(filterFN)
+    .reverse()
+    .map(([date, amount], index) => [index + 1, amount]);
 
   //'linear', 'exponential', 'logarithmic', 'power', 'polynomial',
   const options = { order: 1, precision: 4 };
   const result = regression.linear(indexed, options);
 
-  const mean = (arr) => arr.reduce((acc, val) => acc + val, 0) / arr.length;
+  const sum = (arr) => arr.reduce((acc, val) => acc + val, 0);
+  const mean = (arr) => sum(arr) / arr.length;
+
+  const total = sum(indexed.map(([x, y]) => y));
   const avg = mean(indexed.map(([x, y]) => y));
   const next = result.predict(indexed.length + 1)[1]; // [x, y]
 
-  // TODO: compute yeild and add expense ratio
-  return { avg, next, expenseRatio: data.expenseRatio };
+  return {
+    avg,
+    next,
+    expenseRatio,
+    yield: total / price,
+  };
 }
 
 // should be 261
