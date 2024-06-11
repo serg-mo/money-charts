@@ -23,30 +23,34 @@ for symbol in "${symbols[@]}"; do
     -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36' \
     | jq '{ dividends: .chart_data[0][0].raw_data }' > "$file.dividends.json"
 
-  curl -sS 'https://api-global.morningstar.com/sal-service/v1/etf/quote/v1/F00000OBHG/data?fundServCode=&showAnalystRatingChinaFund=false&showAnalystRating=false&languageId=en&locale=en&clientId=MDC&benchmarkId=mstarorcat&component=sal-mip-quote&version=4.7.0' \
-    -H 'accept: */*' \
-    -H 'accept-language: en-US,en;q=0.9' \
-    -H 'apikey: lstzFDEOhfFNMLikKa0am9mgEKLBl49T' \
-    -H 'cache-control: no-cache' \
-    -H 'dnt: 1' \
-    -H 'origin: https://www.morningstar.com' \
-    -H 'pragma: no-cache' \
-    -H 'priority: u=1, i' \
-    -H 'referer: https://www.morningstar.com/etfs/arcx/${symbol}/quote' \
-    -H 'sec-ch-ua: "Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"' \
-    -H 'sec-ch-ua-mobile: ?0' \
-    -H 'sec-ch-ua-platform: "macOS"' \
-    -H 'sec-fetch-dest: empty' \
-    -H 'sec-fetch-mode: cors' \
-    -H 'sec-fetch-site: same-site' \
-    -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36' \
-    -H 'x-api-realtime-e: eyJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.X-h4zn65XpjG8cZnL3e6hj8LMbzupQBglHZce7tzu-c4utCtXQ2IYoLxdik04usYRhNo74AS_2crdjLnBc_J0lFEdAPzb_OBE7HjwfRaYeNhfXIDw74QCrFGqQ5n7AtllL-vTGnqmI1S9WJhSwnIBe_yRxuXGGbIttizI5FItYY.bB3WkiuoS1xzw78w.iTqTFVbxKo4NQQsNNlbkF4tg4GCfgqdRdQXN8zQU3QYhbHc-XDusH1jFii3-_-AIsqpHaP7ilG9aBxzoK7KPPfK3apcoMS6fDM3QLRSZzjkBoxWK75FtrQMAN5-LecdJk97xaXEciS0QqqBqNugoSPwoiZMazHX3rr7L5jPM-ecXN2uEjbSR0wfg-57iHAku8jvThz4mtGpMRAOil9iZaL6iRQ.o6tR6kuOQBhnpcsdTQeZWw' \
-    -H 'x-api-requestid: 082b69f5-6c44-bb6b-2c8e-a2ae137279a8' \
-    -H 'x-sal-contenttype: e7FDDltrTy+tA2HnLovvGL0LFMwT+KkEptGju5wXVTU=' \
-    | jq '{ price: .nav, expenseRatio: .expenseRatio }' > "$file.stats.json"
 
-    jq -s 'add' "$file.dividends.json" "$file.stats.json" > "$file.json"
-    rm "$file.dividends.json" "$file.stats.json"
+  curl -s "https://finance.yahoo.com/quote/AAPL/" | grep -oP '"currentPrice":{"raw":\K[0-9.]+'
+
+  # TODO: redo this, it only pulls XYLD numbers
+  # url -sS 'https://api-global.morningstar.com/sal-service/v1/etf/quote/v1/F00000OBHG/data?fundServCode=&showAnalystRatingChinaFund=false&showAnalystRating=false&languageId=en&locale=en&clientId=MDC&benchmarkId=mstarorcat&component=sal-mip-quote&version=4.7.0' \
+  #  -H 'accept: */*' \
+  #  -H 'accept-language: en-US,en;q=0.9' \
+  #  -H 'apikey: lstzFDEOhfFNMLikKa0am9mgEKLBl49T' \
+  #  -H 'cache-control: no-cache' \
+  #  -H 'dnt: 1' \
+  #  -H 'origin: https://www.morningstar.com' \
+  #  -H 'pragma: no-cache' \
+  #  -H 'priority: u=1, i' \
+  #  -H 'referer: https://www.morningstar.com/etfs/arcx/${symbol}/quote' \
+  #  -H 'sec-ch-ua: "Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"' \
+  #  -H 'sec-ch-ua-mobile: ?0' \
+  #  -H 'sec-ch-ua-platform: "macOS"' \
+  #  -H 'sec-fetch-dest: empty' \
+  #  -H 'sec-fetch-mode: cors' \
+  #  -H 'sec-fetch-site: same-site' \
+  #  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36' \
+  #  -H 'x-api-realtime-e: eyJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.X-h4zn65XpjG8cZnL3e6hj8LMbzupQBglHZce7tzu-c4utCtXQ2IYoLxdik04usYRhNo74AS_2crdjLnBc_J0lFEdAPzb_OBE7HjwfRaYeNhfXIDw74QCrFGqQ5n7AtllL-vTGnqmI1S9WJhSwnIBe_yRxuXGGbIttizI5FItYY.bB3WkiuoS1xzw78w.iTqTFVbxKo4NQQsNNlbkF4tg4GCfgqdRdQXN8zQU3QYhbHc-XDusH1jFii3-_-AIsqpHaP7ilG9aBxzoK7KPPfK3apcoMS6fDM3QLRSZzjkBoxWK75FtrQMAN5-LecdJk97xaXEciS0QqqBqNugoSPwoiZMazHX3rr7L5jPM-ecXN2uEjbSR0wfg-57iHAku8jvThz4mtGpMRAOil9iZaL6iRQ.o6tR6kuOQBhnpcsdTQeZWw' \
+  #  -H 'x-api-requestid: 082b69f5-6c44-bb6b-2c8e-a2ae137279a8' \
+  #  -H 'x-sal-contenttype: e7FDDltrTy+tA2HnLovvGL0LFMwT+KkEptGju5wXVTU=' \
+  #  | jq '{ price: .nav, expenseRatio: .expenseRatio }' > "$file.stats.json"
+
+  #  jq -s 'add' "$file.dividends.json" "$file.stats.json" > "$file.json"
+  #  rm "$file.dividends.json" "$file.stats.json"
 
     sleep 2
 done
