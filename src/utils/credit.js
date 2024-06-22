@@ -25,7 +25,7 @@ export const CATEGORIES = {
   UNCLASSIFIED: "UNCLASSIFIED",
   UTILITIES: "UTILITIES",
   GYM: "GYM",
-  GIFTS: "GIFTS",
+  GIFTS: "GIFTS", // TODO: merge with OTHER
 };
 
 // TODO: prune tailwind color names down to 10
