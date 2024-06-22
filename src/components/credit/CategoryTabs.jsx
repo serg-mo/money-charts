@@ -16,7 +16,7 @@ export default function CategoryTabs() {
         <button
           key={category}
           className={`${tabClass} ${category === tab ? activeTabClass : ""}`}
-          onClick={() => setTab(category)}
+          onClick={() => setTab(category === "ALL" ? undefined : category)}
         >
           {category}
         </button>

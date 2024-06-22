@@ -13,19 +13,15 @@ export const CreditContext = createContext();
 // TODO: otherwise the stacked area chart will look weird
 export const CATEGORIES = {
   CAR: "CAR",
-  FUN: "FUN",
-  OTHER: "OTHER",
-  FOOD: "FOOD",
-  HEALTH: "HEALTH",
-  INSURANCE: "INSURANCE",
+  GROCERY: "GROCERY",
+  HEALTH: "HEALTH", // includes insurance
+  OTHER: "OTHER", // includes gifts
   PET: "PET",
+  RESTAURANT: "RESTAURANT",
   SHOPPING: "SHOPPING",
-  SUBSCRIPTIONS: "SUBSCRIPTIONS", // TODO: merge with utilities
-  TRAVEL: "TRAVEL",
+  TRAVEL: "TRAVEL", // includes ubers, flights, hotel, car, and activities
   UNCLASSIFIED: "UNCLASSIFIED",
-  UTILITIES: "UTILITIES",
-  GYM: "GYM",
-  GIFTS: "GIFTS", // TODO: merge with OTHER
+  UTILITIES: "UTILITIES", // includes subscriptions, gym
 };
 
 // TODO: prune tailwind color names down to 10
@@ -36,21 +32,18 @@ export const CATEGORIES = {
 // TODO: first classify everything, then sort categories by size, then pick the colors
 // category buttons will appear in this order
 export const COLORS = {
-  [CATEGORIES.FOOD]: "rgba(23, 130, 171, 0.9)",
-  [CATEGORIES.SHOPPING]: "rgba(19, 100, 134, 0.85)",
   [CATEGORIES.CAR]: "rgba(15, 72, 101, 0.8)",
-  [CATEGORIES.PET]: "rgba(13, 45, 67, 0.75)",
-  [CATEGORIES.SUBSCRIPTIONS]: "rgba(235, 85, 25, 0.9)",
-  [CATEGORIES.TRAVEL]: "rgba(206, 56, 24, 0.85)",
+  [CATEGORIES.GROCERY]: "rgba(23, 130, 171, 0.9)",
   [CATEGORIES.HEALTH]: "rgba(230, 154, 43, 0.9)",
-  [CATEGORIES.FUN]: "rgba(233, 120, 34, 0.85)",
-  [CATEGORIES.GIFTS]: "rgba(229, 191, 53, 0.9)",
-  [CATEGORIES.UTILITIES]: "rgba(77, 152, 128, 0.8)",
-  [CATEGORIES.GYM]: "rgba(145, 172, 89, 0.85)",
-  [CATEGORIES.INSURANCE]: "rgba(176, 27, 22, 0.9)",
   [CATEGORIES.OTHER]: "rgba(200, 200, 200, 0.8)",
+  [CATEGORIES.PET]: "rgba(13, 45, 67, 0.75)",
+  [CATEGORIES.RESTAURANT]: "rgba(233, 120, 34, 0.85)",
+  [CATEGORIES.SHOPPING]: "rgba(19, 100, 134, 0.85)",
+  [CATEGORIES.TRAVEL]: "rgba(206, 56, 24, 0.85)",
   [CATEGORIES.UNCLASSIFIED]: "rgba(200, 200, 200, 0.75)",
+  [CATEGORIES.UTILITIES]: "rgba(77, 152, 128, 0.8)",
 };
+
 
 // TODO: make a constants file
 const MIN_NAME_LENGTH = 23;
