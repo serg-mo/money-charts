@@ -11,6 +11,7 @@ export const CreditContext = createContext();
 
 // TODO: ideally there would be at least one transaction per category per month
 // TODO: otherwise the stacked area chart will look weird
+// TODO: make a map for category, budget, and color
 export const CATEGORIES = {
   CAR: "CAR",
   GROCERY: "GROCERY",
@@ -24,13 +25,7 @@ export const CATEGORIES = {
   UTILITIES: "UTILITIES", // includes subscriptions, gym
 };
 
-// TODO: prune tailwind color names down to 10
-// slate, gray, zinc, neutral, stone,
-// red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose
-
-// TODO: have two layers of categories, so that subcategory can have shades of the main category
-// TODO: first classify everything, then sort categories by size, then pick the colors
-// category buttons will appear in this order
+// category buttons will appear in this order, alphabetically
 export const COLORS = {
   [CATEGORIES.CAR]: "rgba(15, 72, 101, 0.8)",
   [CATEGORIES.GROCERY]: "rgba(23, 130, 171, 0.9)",
