@@ -14,6 +14,10 @@ import CandidatesChart from "./CandidatesChart";
 import CandidateChart from "./CandidateChart";
 import CardStats from "./CardStats";
 
+// TODO: I can download dividends CSV from fidelity, instead of my own spreadsheet
+// it contains name, now, and cost, which is all I really need. There is no OK though.
+// but then I would not need to fetch prices. I still need to fetch expense ratios.
+
 // TODO: this is where backtracking algo would work well
 // TODO: hovering over a point should highlight the same candidate elsewhere
 // TODO: color code a third dimension, like ROI to transparency

@@ -82,6 +82,14 @@ export function arrayProduct(...arrays) {
   return result;
 }
 
+export function arrayDifference(a, b) {
+  if (a.length !== b.length) {
+    throw new Error("Arrays must be of the same length")
+  }
+
+  return a.map((value, index) => value - b[index]);
+}
+
 
 export function sumProduct(...arrays) {
   const size = arrays[0].length;

@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
 import {
-  DividendContext
+  DividendContext,
+  arrayDifference,
+  arrayProduct
 } from "../../utils/dividends";
 
 export default function CardStats({ cards }) {
-  const { names, dividends } = useContext(DividendContext);
+  const { names, dividends, prices } = useContext(DividendContext);
+
+  const orders = arrayDifference(cards.current.candidate, cards.split.candidate)
+  const costs = arrayProduct(orders, prices)
 
   return (
     <>
@@ -33,6 +38,8 @@ export default function CardStats({ cards }) {
           <tr>
             <th>Name</th>
             <th>Next Dividend</th>
+            <th>Order</th>
+            <th>Cost</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +47,8 @@ export default function CardStats({ cards }) {
             <tr key={index}>
               <td className="border">{name}</td>
               <td className="border">${dividends[index]}</td>
+              <td className="border">${orders[index]}</td>
+              <td className="border">${costs[index].toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
