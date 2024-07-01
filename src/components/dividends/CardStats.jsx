@@ -8,7 +8,7 @@ import {
 export default function CardStats({ cards }) {
   const { names, dividends, prices } = useContext(DividendContext);
 
-  const orders = arrayDifference(cards.current.candidate, cards.split.candidate)
+  const orders = arrayDifference(cards.split.candidate, cards.current.candidate)
   const costs = arrayProduct(orders, prices)
 
   return (
@@ -47,8 +47,8 @@ export default function CardStats({ cards }) {
             <tr key={index}>
               <td className="border">{name}</td>
               <td className="border">${dividends[index]}</td>
-              <td className="border">${orders[index]}</td>
-              <td className="border">${costs[index].toFixed(2)}</td>
+              <td className="border">{orders[index]}</td>
+              <td className="border">${costs[index].toFixed()}</td>
             </tr>
           ))}
         </tbody>
